@@ -9,7 +9,11 @@ export default class Cart {
      * @param {interface} item - An interface param.
      */
     add(item: IBuyable): void {
-        this._items.push(item);
+        if (item.single && this._items.includes(item)) {
+            throw new Error('Single item');
+        } else {
+            this._items.push(item);
+        }
     }
     /**
      * Counts total sum in the Cart
@@ -29,13 +33,23 @@ export default class Cart {
     }
 
     /**
-     * Deletes items from the Cart by id
+     * Decrease  items in the the Cart by id
      * @param {number} id
      */
-    remove(id: number): void {
+    decrease(id: number): void {
         this._items.splice(this._items.findIndex(item => {
             return item.id === id;
         }), 1);
+    }
+
+    /**
+     * Deletes items from the Cart by id
+     * @param {number} id
+     */
+    delete(id: number): void {
+        this._items = this._items.filter(item => {
+            return item.id !== id;
+        });
     }
 
     get items(): IBuyable[] {
